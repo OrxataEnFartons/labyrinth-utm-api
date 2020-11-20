@@ -1,0 +1,56 @@
+{
+  "title": "position",
+  "type": "object",
+  "x-tags": [
+    "report"
+  ],
+  "description": "A report message of the position (among other things) of the drone. Similar to the ADS-B concept but to be sent to the UTM. Not all drones will be able to provide all values.  \n*** I inferred some basic values but I don't know exactly which kind of values can provide a small drone. ",
+  "properties": {
+    "serial_number": {
+      "type": "string"
+    },
+    "lat": {
+      "type": "number",
+      "description": "in degrees (float)"
+    },
+    "lon": {
+      "type": "number",
+      "description": "in degrees (float)"
+    },
+    "alt": {
+      "type": "integer",
+      "description": "Absolute altitude, in meters (float)"
+    },
+    "vx": {
+      "type": "integer",
+      "description": "X Speed (in Latitude direction, positive: going north) (float)"
+    },
+    "vy": {
+      "type": "integer",
+      "description": "Y Speed (in Latitude direction, positive: going north) (float)"
+    },
+    "vz": {
+      "type": "integer",
+      "description": "Z Speed (in Latitude direction, positive: going north) (float)"
+    },
+    "timestamp": {
+      "type": "string"
+    },
+    "ground_speed": {
+      "type": "number"
+    },
+    "next_wp": {
+      "$ref": "./waypoint.v1.json"
+    }
+  },
+  "required": [
+    "serial_number",
+    "lat",
+    "lon",
+    "alt",
+    "vx",
+    "vy",
+    "vz",
+    "timestamp"
+  ]
+}

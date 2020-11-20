@@ -311,9 +311,39 @@
         "tags": [
           "report"
         ],
-        "responses": {},
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
         "operationId": "post-position",
-        "description": "Equivalent to ADS-B/Remote ID."
+        "description": "Kind of ADS-B/Remote ID.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "token"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "position": {
+                    "$ref": "../models/position.v1.json"
+                  }
+                }
+              }
+            }
+          }
+        }
       }
     }
   },
