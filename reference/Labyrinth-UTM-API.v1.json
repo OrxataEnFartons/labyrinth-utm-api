@@ -118,6 +118,10 @@
                     },
                     "flight_plan_id": {
                       "type": "string"
+                    },
+                    "reason": {
+                      "type": "string",
+                      "description": "reason to reject"
                     }
                   },
                   "required": [
@@ -313,14 +317,21 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "../models/flight_plan.v1.json"
+                }
+              }
+            }
           },
           "400": {
             "description": "Bad Request"
           }
         },
         "operationId": "post-position",
-        "description": "Kind of ADS-B/Remote ID.",
+        "description": "Kind of ADS-B/Remote ID. These reports are redundantly sent by the drone and the GCS. I added a query param to distinguish which one is sending the information. \nWhen the UTM needs to change the plan, leverages the reply to this report to send the change. ",
         "parameters": [
           {
             "schema": {
@@ -328,6 +339,15 @@
             },
             "in": "header",
             "name": "token"
+          },
+          {
+            "schema": {
+              "type": "boolean"
+            },
+            "in": "query",
+            "name": "source",
+            "description": "If this position is sent by the GCS or the drone.",
+            "required": true
           }
         ],
         "requestBody": {
@@ -342,7 +362,8 @@
                 }
               }
             }
-          }
+          },
+          "description": ""
         }
       }
     }
