@@ -36,8 +36,17 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "type": "string"
+                }
+              },
+              "application/xml": {
+                "schema": {
                   "type": "object",
-                  "properties": {}
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
@@ -106,10 +115,14 @@
                     },
                     "alternative": {
                       "$ref": "../models/flight_plan.v1.json"
+                    },
+                    "flight_plan_id": {
+                      "type": "string"
                     }
                   },
                   "required": [
-                    "accepted"
+                    "accepted",
+                    "flight_plan_id"
                   ]
                 }
               }
@@ -126,15 +139,15 @@
           }
         },
         "operationId": "post-validate_flight_plan",
-        "description": "The operator sends a flight plan before the take-off to be validated by the UTM system. 303 would send a plan with modifications to make it feasible, but it should be accepted by the operator. 400 for badly constructed query. 403 for access denied (f.i., operator is not logged). 406 is the flight plan is not possible but we don't offer an alternative (which depends on the capabilities of the planner). ",
+        "description": "The operator sends a flight plan before the take-off to be validated by the UTM system. ",
         "parameters": [
           {
             "schema": {
               "type": "string"
             },
             "in": "header",
-            "name": "reasons",
-            "description": "Reasons why the plan was rejected. That gives a clue for the operator to design a new one. "
+            "name": "token",
+            "description": "The token returned after a successful login."
           }
         ],
         "requestBody": {
@@ -146,7 +159,10 @@
                   "": {
                     "$ref": "../models/flight_plan.v1.json"
                   }
-                }
+                },
+                "required": [
+                  ""
+                ]
               }
             },
             "application/xml": {
@@ -168,7 +184,7 @@
               }
             }
           },
-          "description": "Flight plan to validate"
+          "description": "Flight plan to validate. I am considering that is the server which sets the flight plan id. "
         }
       },
       "parameters": [],
@@ -205,7 +221,14 @@
             "in": "query",
             "name": "flight_plan_id",
             "required": true,
-            "description": "Flight plan alternative accepted by the operator. "
+            "description": "Flight plan alternative accepted by the operator. I am not putting this in the path because I only have this value when I receive the alternative."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "token"
           }
         ],
         "tags": [
@@ -213,112 +236,84 @@
         ]
       }
     },
-    "/takeoff": {
-      "post": {
-        "summary": "Flight plan about to be executed",
-        "tags": [
-          "request"
-        ],
+    "/takeoff/{flight_plan_id}": {
+      "parameters": [],
+      "get": {
+        "summary": "",
+        "operationId": "get-takeoff-flight_plan_id",
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "string"
-                }
-              },
-              "application/xml": {
-                "schema": {
-                  "$ref": "../models/flight_plan.v1.json"
-                }
-              },
-              "multipart/form-data": {
-                "schema": {
                   "type": "object",
                   "properties": {
-                    "accepted": {
-                      "type": "string"
+                    "reasons": {
+                      "type": "string",
+                      "description": "In case is rejected, for the pilot to know how to build a feasible plan."
                     },
                     "alternative": {
-                      "type": "string"
-                    },
-                    "": {
-                      "type": "string"
+                      "$ref": "../models/flight_plan.v1.json"
                     }
                   }
                 }
-              },
-              "text/html": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "accepted": {
-                      "type": "string",
-                      "description": "The flight plan that was filed to start now is still valid. Only if it is not valid anymore, an alternative plan can be expected.\n"
-                    },
-                    "alternative": {
-                      "$ref": "../models/flight_plan.v1.json"
-                    }
-                  },
-                  "required": [
-                    "accepted"
-                  ]
-                }
-              },
-              "text/plain": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "accepted": {
-                      "type": "string",
-                      "description": "plan still valid, you can execute"
-                    },
-                    "alternative": {
-                      "$ref": "../models/flight_plan.v1.json"
-                    }
-                  },
-                  "required": [
-                    "accepted"
-                  ]
-                }
               }
             }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         },
-        "operationId": "post-takeoff",
-        "description": "Pilot asks for permission to start to execute a filed flight plan that starts now. If any last minute changes are necessary, the pilot sends the flight plan with the requested changes. This can be accepted or an alternative sent to the pilot.",
+        "description": "Pilot asks for permission to start to execute a filed flight plan that starts now. If any last minute changes are necessary, the pilot sends the flight plan with the requested changes. This can be accepted or an alternative sent to the pilot if possible. They start a negotiation process using the already assigned flight_plan_id.",
         "parameters": [
           {
             "schema": {
-              "type": "integer"
+              "type": "string"
+            },
+            "in": "header",
+            "name": "token"
+          },
+          {
+            "schema": {
+              "type": "string"
             },
             "in": "query",
-            "name": "flight_plan_id",
-            "required": true,
-            "description": "Identificator received when the flight plan was accepted. "
+            "name": "flight_plan_id"
           }
         ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "../models/flight_plan.v1.json"
-              }
-            },
-            "application/xml": {
-              "schema": {
                 "type": "object",
                 "properties": {
-                  "fligh_plan_changes": {
+                  "flight_plan_changes": {
                     "$ref": "../models/flight_plan.v1.json"
                   }
                 }
               }
             }
           },
-          "description": "Ask UTM if the current flight plan is still valid, to start immediately with it. If the plan required last minute changes, send it again to be approved."
+          "description": "If changes are requested it sends the new flight plan, using the already assigned flight_plan_id."
         }
+      }
+    },
+    "/position": {
+      "post": {
+        "summary": "Position report",
+        "tags": [
+          "report"
+        ],
+        "responses": {},
+        "operationId": "post-position",
+        "description": "Equivalent to ADS-B/Remote ID."
       }
     }
   },
