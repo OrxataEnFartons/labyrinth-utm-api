@@ -1,0 +1,17 @@
+{
+  "title": "waypoint",
+  "type": "object",
+  "properties": {
+    "coords": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "items": {
+        "type": "number"
+      }
+    }
+  },
+  "required": [
+    "coords"
+  ]
+}

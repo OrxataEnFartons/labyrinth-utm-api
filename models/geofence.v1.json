@@ -1,0 +1,9 @@
+{
+  "type": "array",
+  "title": "geofence",
+  "minItems": 3,
+  "maxItems": 3,
+  "items": {
+    "$ref": "./waypoint.v1.json"
+  }
+}

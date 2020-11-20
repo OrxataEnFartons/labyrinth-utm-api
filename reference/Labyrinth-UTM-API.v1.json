@@ -1,0 +1,276 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Labyrinth UTM API",
+    "version": "1.0",
+    "contact": {
+      "name": "FL-PAS",
+      "url": "www.",
+      "email": "someone@dlr.de"
+    },
+    "description": "API describing the message exchange between the drones/GCSs and the UTM system."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "paths": {
+    "/login/{operator_id}": {
+      "parameters": [
+        {
+          "schema": {
+            "type": "string"
+          },
+          "name": "operator_id",
+          "in": "path",
+          "required": true
+        }
+      ],
+      "get": {
+        "summary": "Login in the UTM system",
+        "operationId": "get-login-drone_id",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "description": "user login request",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "operator_id",
+            "description": "A unique operator identifier"
+          }
+        ],
+        "tags": [
+          "request",
+          "report",
+          "instruction"
+        ]
+      }
+    },
+    "/flight_plan_validation": {
+      "post": {
+        "summary": "Validate pre-flight plan",
+        "tags": [
+          "request"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "headers": {},
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "accepted": {
+                      "type": "string",
+                      "description": "here we say somehow: a) it was accepted (and no no more actions are required from the pilot side), b) it was rejected and in this case they can find an alternative plan (their plan with some modifications to make it feasible) or not (several factors can contribute to the possibility to calculate an alternative plan)"
+                    },
+                    "alternative": {
+                      "$ref": "../models/flight_plan.v1.json"
+                    }
+                  },
+                  "required": [
+                    "accepted"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "406": {
+            "description": "Not Acceptable"
+          }
+        },
+        "operationId": "post-validate_flight_plan",
+        "description": "The operator sends a flight plan before the take-off to be validated by the UTM system. 303 would send a plan with modifications to make it feasible, but it should be accepted by the operator. 400 for badly constructed query. 403 for access denied (f.i., operator is not logged). 406 is the flight plan is not possible but we don't offer an alternative (which depends on the capabilities of the planner). ",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "reasons",
+            "description": "Reasons why the plan was rejected. That gives a clue for the operator to design a new one. "
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "": {
+                    "$ref": "../models/flight_plan.v1.json"
+                  }
+                }
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            },
+            "text/html": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          },
+          "description": "Flight plan to validate"
+        }
+      },
+      "parameters": [],
+      "get": {
+        "summary": "Flight plan validation",
+        "operationId": "get-flight_plan_validation",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "description": "Accept a flight plan alternative previously sent by the server.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer"
+            },
+            "in": "query",
+            "name": "flight_plan_id",
+            "required": true,
+            "description": "Flight plan alternative accepted by the operator. "
+          }
+        ],
+        "tags": [
+          "request"
+        ]
+      }
+    },
+    "/takeoff": {
+      "post": {
+        "summary": "Flight plan about to be executed",
+        "tags": [
+          "request"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "303": {
+            "description": "See alternative",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "../models/flight_plan.v1.json"
+                }
+              }
+            },
+            "headers": {
+              "reasons": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Reasons for being rejected"
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "headers": {
+              "reasons": {
+                "schema": {
+                  "type": "string"
+                },
+                "description": "Reasons for being rejected"
+              }
+            }
+          }
+        },
+        "operationId": "post-takeoff",
+        "description": "If no changes are necessary to the filed flight plan, the pilot reports the start of the execution. Otherwise, sends the flight plan with the requested changes. This can be accepted or an alternative sent.",
+        "parameters": [
+          {
+            "schema": {
+              "type": "integer"
+            },
+            "in": "query",
+            "name": "flight_plan_id"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../models/flight_plan.v1.json"
+              }
+            }
+          },
+          "description": ""
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  },
+  "tags": [
+    {
+      "name": "request"
+    },
+    {
+      "name": "report"
+    },
+    {
+      "name": "instruction"
+    }
+  ]
+}

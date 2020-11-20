@@ -1,0 +1,93 @@
+{
+  "title": "flight_plan",
+  "type": "object",
+  "x-examples": {
+    "example-1": {
+      "id": "string"
+    }
+  },
+  "description": "Flight plan including desired trajectory, preferences and contingency plans.",
+  "properties": {
+    "serial_number": {
+      "type": [
+        "array",
+        "string"
+      ],
+      "description": "Sistem ID of the drone or drones (when is a swarm)",
+      "items": {}
+    },
+    "date": {
+      "type": "string",
+      "description": "No special format found. We could require f.i. dd-mm-yy"
+    },
+    "time": {
+      "type": "string",
+      "description": "Take-off time. No special format found, but we will require the 0-23 format."
+    },
+    "UTC": {
+      "type": "string",
+      "description": "UTC time zone. F. i. \"+1\" "
+    },
+    "origin": {
+      "type": "array",
+      "description": "Origin coords (WGS84 in Decimal Degrees format)",
+      "maxItems": 2,
+      "minItems": 2,
+      "items": {
+        "type": "number"
+      }
+    },
+    "destination": {
+      "type": "array",
+      "minItems": 2,
+      "maxItems": 2,
+      "description": "Destination waypoint",
+      "items": {
+        "type": "number"
+      }
+    },
+    "trajectory": {
+      "anyOf": [
+        {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "description": "waypoint",
+          "items": {
+            "type": "integer"
+          }
+        },
+        {
+          "$ref": "./area_to_scan.v1.json"
+        }
+      ],
+      "description": "The minimum WPs are origin an destination. This is optional."
+    },
+    "altitude": {
+      "type": "number",
+      "description": "Preferred altitude. Required sea level referred. "
+    },
+    "geofences": {
+      "type": "array",
+      "description": "Operators can define areas to avoid during the flight (I guess in case an alternative is sent)",
+      "items": {
+        "$ref": "./geofence.v1.json"
+      }
+    },
+    "fligh_plan_id": {
+      "type": "integer"
+    },
+    "max_speed_pref": {
+      "type": "string",
+      "description": "Maximum speed desired by the operator. In the UC3 planner applies to all the flight and will try to fly at that speed where possible. "
+    }
+  },
+  "required": [
+    "serial_number",
+    "date",
+    "time",
+    "UTC",
+    "origin",
+    "destination"
+  ]
+}
