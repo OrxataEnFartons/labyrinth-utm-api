@@ -18,19 +18,19 @@
       "description": "in degrees (float)"
     },
     "alt": {
-      "type": "integer",
+      "type": "number",
       "description": "Absolute altitude, in meters (float)"
     },
     "vx": {
-      "type": "integer",
+      "type": "number",
       "description": "X Speed (in Latitude direction, positive: going north) (float)"
     },
     "vy": {
-      "type": "integer",
+      "type": "number",
       "description": "Y Speed (in Latitude direction, positive: going north) (float)"
     },
     "vz": {
-      "type": "integer",
+      "type": "number",
       "description": "Z Speed (in Latitude direction, positive: going north) (float)"
     },
     "timestamp": {
