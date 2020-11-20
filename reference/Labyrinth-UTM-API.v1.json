@@ -57,7 +57,25 @@
             },
             "in": "query",
             "name": "operator_id",
-            "description": "A unique operator identifier"
+            "description": "A unique operator identifier",
+            "required": true
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "pilot_name",
+            "required": true,
+            "description": "For accountability purposes."
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "phone",
+            "description": "In case there is a need to get in contact with the pilot (a long term requirement)"
           }
         ],
         "tags": [
@@ -178,7 +196,7 @@
             "description": "Internal Server Error"
           }
         },
-        "description": "Accept a flight plan alternative previously sent by the server.",
+        "description": "Accept a flight plan alternative previously sent by the server. (In my mind it was that this get could be used also to accept the alternative offered after sending a /takeoff that is rejected)",
         "parameters": [
           {
             "schema": {
@@ -203,47 +221,82 @@
         ],
         "responses": {
           "200": {
-            "description": "OK"
-          },
-          "303": {
-            "description": "See alternative",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
+                  "type": "string"
+                }
+              },
+              "application/xml": {
+                "schema": {
                   "$ref": "../models/flight_plan.v1.json"
                 }
-              }
-            },
-            "headers": {
-              "reasons": {
+              },
+              "multipart/form-data": {
                 "schema": {
-                  "type": "string"
-                },
-                "description": "Reasons for being rejected"
-              }
-            }
-          },
-          "409": {
-            "description": "Conflict",
-            "headers": {
-              "reasons": {
+                  "type": "object",
+                  "properties": {
+                    "accepted": {
+                      "type": "string"
+                    },
+                    "alternative": {
+                      "type": "string"
+                    },
+                    "": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "text/html": {
                 "schema": {
-                  "type": "string"
-                },
-                "description": "Reasons for being rejected"
+                  "type": "object",
+                  "properties": {
+                    "accepted": {
+                      "type": "string",
+                      "description": "The flight plan that was filed to start now is still valid. Only if it is not valid anymore, an alternative plan can be expected.\n"
+                    },
+                    "alternative": {
+                      "$ref": "../models/flight_plan.v1.json"
+                    }
+                  },
+                  "required": [
+                    "accepted"
+                  ]
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "accepted": {
+                      "type": "string",
+                      "description": "plan still valid, you can execute"
+                    },
+                    "alternative": {
+                      "$ref": "../models/flight_plan.v1.json"
+                    }
+                  },
+                  "required": [
+                    "accepted"
+                  ]
+                }
               }
             }
           }
         },
         "operationId": "post-takeoff",
-        "description": "If no changes are necessary to the filed flight plan, the pilot reports the start of the execution. Otherwise, sends the flight plan with the requested changes. This can be accepted or an alternative sent.",
+        "description": "Pilot asks for permission to start to execute a filed flight plan that starts now. If any last minute changes are necessary, the pilot sends the flight plan with the requested changes. This can be accepted or an alternative sent to the pilot.",
         "parameters": [
           {
             "schema": {
               "type": "integer"
             },
             "in": "query",
-            "name": "flight_plan_id"
+            "name": "flight_plan_id",
+            "required": true,
+            "description": "Identificator received when the flight plan was accepted. "
           }
         ],
         "requestBody": {
@@ -252,9 +305,19 @@
               "schema": {
                 "$ref": "../models/flight_plan.v1.json"
               }
+            },
+            "application/xml": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "fligh_plan_changes": {
+                    "$ref": "../models/flight_plan.v1.json"
+                  }
+                }
+              }
             }
           },
-          "description": ""
+          "description": "Ask UTM if the current flight plan is still valid, to start immediately with it. If the plan required last minute changes, send it again to be approved."
         }
       }
     }
