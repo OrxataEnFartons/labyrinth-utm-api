@@ -379,6 +379,27 @@
           "description": ""
         }
       }
+    },
+    "/logoff": {
+      "get": {
+        "summary": "Log off (end of flight)",
+        "tags": [
+          "report"
+        ],
+        "responses": {},
+        "operationId": "get-logoff",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "token",
+            "required": true
+          }
+        ],
+        "description": "I fused the logoff as report of end of flight. "
+      }
     }
   },
   "components": {
