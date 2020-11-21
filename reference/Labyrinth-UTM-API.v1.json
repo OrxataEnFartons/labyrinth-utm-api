@@ -323,6 +323,19 @@
                 "schema": {
                   "$ref": "../models/flight_plan.v1.json"
                 }
+              },
+              "application/xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "deviation": {
+                      "$ref": "../models/flight_plan.v1.json"
+                    },
+                    "position": {
+                      "$ref": "../models/position.v1.json"
+                    }
+                  }
+                }
               }
             }
           },
@@ -331,7 +344,7 @@
           }
         },
         "operationId": "post-position",
-        "description": "Kind of ADS-B/Remote ID. These reports are redundantly sent by the drone and the GCS. I added a query param to distinguish which one is sending the information. \nWhen the UTM needs to change the plan, leverages the reply to this report to send the change. ",
+        "description": "Kind of ADS-B/Remote ID. These reports are redundantly sent by the drone and the GCS. I added a query param to distinguish which one is sending the information. \nWhen the UTM needs to change the plan, leverages the reply to this report to send the change. \nIf the GCS loses the link with the drone, it keeps sending this message to the UTM without the position. Then, if the drone keeps the link with the UTM, the UTM leverages the reply to the GCS empty report to forward to it the aircraft status. ",
         "parameters": [
           {
             "schema": {

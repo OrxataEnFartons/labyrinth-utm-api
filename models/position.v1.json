@@ -4,7 +4,7 @@
   "x-tags": [
     "report"
   ],
-  "description": "A report message of the position (among other things) of the drone. Similar to the ADS-B concept but to be sent to the UTM. Not all drones will be able to provide all values.  \n*** I inferred some basic values but I don't know exactly which kind of values can provide a small drone. ",
+  "description": "A report message of the position (among other things) of the drone. Similar to ADS-B. Probably not all drones will be able to provide all values. \n*** I inferred some basic values but I don't know exactly which kind of values can provide a small drone. ",
   "properties": {
     "serial_number": {
       "type": "string"
@@ -41,6 +41,10 @@
     },
     "next_wp": {
       "$ref": "./waypoint.v1.json"
+    },
+    "unable": {
+      "type": "string",
+      "description": "The drone cannot comply with the flight plan/instructions and includes a code indicating the reason, something like MALFUNCTION, BATTERY, SEPARATION... but keeps sending its position and intent to the UTM. The drone should be able to distinguish when it comes back to the flight path and can delete this flag. "
     }
   },
   "required": [
