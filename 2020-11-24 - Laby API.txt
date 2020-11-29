@@ -1,0 +1,41 @@
+# Laby considerations regarding REST API best practices and authentication
+## Login
+- Standard: OAuth2 for client authentication and authorization
+  - Some kind of authentication process has to be performed (see flows) after which an access token (and maybe a refresh token) is returned, with the first being send with each request, while the latter is used to gain a new access token after the current one has expired without needing to login again
+  - The token is transmitted in the "Authorization" header, following a format of `Bearer <token>`
+  - For development purposes, a dummy token can be submitted there and checked in a mock function until it makes sense to actually implement a OAuth2 library/implementation
+  - See: [OAuth2 Access Token Response](https://www.oauth.com/oauth2-servers/access-tokens/access-token-response/)
+  - Flows:
+    - [Client-Credentials](https://auth0.com/docs/flows/client-credentials-flow): intended for machine to machine applications, each API client gets a client ID and client secret that can be exchanged for access tokens that are attached to each request
+    - [Authorization Code](https://auth0.com/docs/flows/authorization-code-flow): client ID and secret are provided to the user after using a web login, that then sends the authorization code to the API
+    - [Device Code](https://www.oauth.com/oauth2-servers/device-flow/token-request/): used by input constrained devices, normally the login is performed on a phone/browser using an URL provided by the device - doesn't seem to be available on stoplight.io, but could be a viable alternative when looking at how drones should be able to login to the API
+  - If all API clients are required to be authenticated, rate limiting could be implemented
+- Differentation between operator (or maybe network? if operator is specifically the pilot at the ground station just mentally replace operator with network in the following) and client: the former can contain several of the latter (i.e. GCSs or drones/swarms)?
+- Example: The Web App Simulator (or even FL-PAS as a whole) could have multiple (simulated or physical) ground stations, that each authenticate with the API using the same credentials for the global security schema, to make sure that they are permitted to even use it in the first place. Then, each GCS starts a session using the `login` method, identifying the pilot/accountable person and register the drones/swarms it controls, allowing them to provide telemetry reports directly to the UTM/API (with e.g. a `Authorization` header containing a token that is blocked for all other methods and expires when the pilot logs off).
+## Status Codes
+- The default response if nothing went wrong should (afaik) be 200 OK, everything else could follow the structure below. Error codes should only be explicitely defined for specific endpoints if they differ from this general structure or are otherwise noteworthy to reduce redundancy and workload in this early stage. For an initial release, it could make sense to add them to the schema (maybe this is even possible to define globally in spotlight?)
+### 2XX Success
+- 200 OK: API call was valid and successfully handled, this doesn't mean the called operation was successful (e.g. a flight plan could still be rejected) so the operation result is returned as the response body
+- 201 Created (POST): new resource was created, `Location` header contains the location of that resource (e.g. the url containing the assigned flight plan ID)
+- 202 Accepted: API call was valid but could not be handled yet and is still processing, poll for the result at a later point
+- 204 No content (DELETE): the request was valid and successfully handled but there is no response (intentionally)
+### 3XX Redirect
+- 303 See other: COULD be used to e.g. provide flight path alternatives, after the proposed flight path was rejected, returning a 200 code may still make more sense as the requested resource was not actually moved and is still available at the same endpoint url
+### 4XX Client errors
+- 400 Bad request: API call was invalid and could not be handled
+- 401 Unauthorized: OAuth must be provided and be valid, please retrieve credentials using the /token or /refresh endpoints
+- 403 Forbidden: insufficient client permissions to access the requested operation according to the provided authentication credentials, for exampling when trying to call `takeoff` for a flight plan that hasn't even been accepted yet or has expired
+- 404 Not found: requested API call does not exist
+- 405 Method not found: requested API call exists, but not for this request type, try again with e.g. POST or GET
+- 406 Not acceptable: the API call request's `Accept` header did not containt the `application/json` media type or the requested charsets or encodings could not be provided
+- 415 Unsupported media type: API calls have to set the `Content-Type` header to `application/json`
+- 422 Unprocessable entity: API call was correctly marked as `application/json`, but the transmitted payload could not be parsed as valid JSON
+- 423 Locked: API call was blocked, as the client, identified by the OAuth credentials, was manually locked and is prevented from accessing the API
+- 429 Too many requests: API call was blocked as the client, identified by the OAuth credentials, performed to many API calls in a given timeframe, exceeding the available quota/rate limit
+- 451 Unavailable for legal reasons: if the UTM API is only provided to specific countries/regions, the client is currently not in one of them and was geo-blocked
+### 5XX Server errors:
+- 500 Internal server error: an unexpected error occured, please open a support issue
+- 501 Not implemented: method is defined in the API, but not actually implemented at this stage of the server development
+- 503 Service unavailable: server overloaded
+## Notes
+- Login/Logout vs. Logon/Logoff?

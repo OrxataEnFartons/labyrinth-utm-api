@@ -16,17 +16,8 @@
     }
   ],
   "paths": {
-    "/login/{operator_id}": {
-      "parameters": [
-        {
-          "schema": {
-            "type": "string"
-          },
-          "name": "operator_id",
-          "in": "path",
-          "required": true
-        }
-      ],
+    "/login": {
+      "parameters": [],
       "get": {
         "summary": "Login in the UTM system",
         "operationId": "get-login-drone_id",
@@ -50,15 +41,9 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "500": {
-            "description": "Internal Server Error"
           }
         },
-        "description": "user login request",
+        "description": "User login request to start a UTM session for the pilot, API authentication and authorization has to be handled prior according to the global security schema and its endpoints.\n",
         "parameters": [
           {
             "schema": {
@@ -88,13 +73,12 @@
           }
         ],
         "tags": [
-          "request",
-          "report",
-          "instruction"
+          "user",
+          "report"
         ]
       }
     },
-    "/flight_plan_validation": {
+    "/flight/plan": {
       "post": {
         "summary": "Validate pre-flight plan",
         "tags": [
@@ -131,29 +115,11 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "406": {
-            "description": "Not Acceptable"
           }
         },
         "operationId": "post-validate_flight_plan",
-        "description": "The operator sends a flight plan before the take-off to be validated by the UTM system. ",
-        "parameters": [
-          {
-            "schema": {
-              "type": "string"
-            },
-            "in": "header",
-            "name": "token",
-            "description": "The token returned after a successful login."
-          }
-        ],
+        "description": "Propose a flight plan before the take-off to be validated by the UTM system. The server creates a flight plan ID to file the proposal under. If it is not accepted, an alternative will be proposed (Martin: using the same flight plan ID?) to the client, starting a negotation process.",
+        "parameters": [],
         "requestBody": {
           "content": {
             "application/json": {
@@ -188,7 +154,7 @@
               }
             }
           },
-          "description": "Flight plan to validate. I am considering that is the server which sets the flight plan id. "
+          "description": "Flight plan to validate.\n\nMiguel: I am considering that is the server which sets the flight plan id.\n\nMartin: I also think that this would be the best way, otherwise the client would need to have a reasonable way to generate valid, unique IDs."
         }
       },
       "parameters": [],
@@ -205,18 +171,9 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "500": {
-            "description": "Internal Server Error"
           }
         },
-        "description": "Accept a flight plan alternative previously sent by the server. (In my mind it was that this get could be used also to accept the alternative offered after sending a /takeoff that is rejected)",
+        "description": "Accept a flight plan alternative previously sent by the server. (Miguel: In my mind it was that this get could be used also to accept the alternative offered after sending a /takeoff that is rejected)",
         "parameters": [
           {
             "schema": {
@@ -224,15 +181,7 @@
             },
             "in": "query",
             "name": "flight_plan_id",
-            "required": true,
-            "description": "Flight plan alternative accepted by the operator. I am not putting this in the path because I only have this value when I receive the alternative."
-          },
-          {
-            "schema": {
-              "type": "string"
-            },
-            "in": "header",
-            "name": "token"
+            "required": true
           }
         ],
         "tags": [
@@ -240,17 +189,8 @@
         ]
       }
     },
-    "/takeoff/{flight_plan_id}": {
-      "parameters": [
-        {
-          "schema": {
-            "type": "integer"
-          },
-          "name": "flight_plan_id",
-          "in": "path",
-          "required": true
-        }
-      ],
+    "/flight/takeoff": {
+      "parameters": [],
       "get": {
         "summary": "",
         "operationId": "get-takeoff-flight_plan_id",
@@ -273,34 +213,18 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "500": {
-            "description": "Internal Server Error"
           }
         },
-        "description": "Pilot asks for permission to start to execute a filed flight plan that starts now. If any last minute changes are necessary, the pilot sends the flight plan with the requested changes. This can be accepted or an alternative sent to the pilot if possible. They start a negotiation process using the already assigned flight_plan_id.",
+        "description": "Pilot asks for permission to execute a filed flight plan that starts now. If any last minute changes are necessary, the pilot sends the flight plan with the requested changes. This can be accepted or an alternative sent to the pilot if possible. They start a negotiation process using the already assigned `flight_plan_id`.",
         "parameters": [
-          {
-            "schema": {
-              "type": "string"
-            },
-            "in": "header",
-            "name": "token",
-            "required": true
-          },
           {
             "schema": {
               "type": "string"
             },
             "in": "query",
             "name": "flight_plan_id",
-            "required": true
+            "required": true,
+            "description": "ID of the flight plan to execute"
           }
         ],
         "requestBody": {
@@ -316,14 +240,14 @@
               }
             }
           },
-          "description": "If changes are requested it sends the new flight plan, using the already assigned flight_plan_id."
+          "description": "If changes are requested it sends the new flight plan, using the already assigned `flight_plan_id`."
         },
         "tags": [
           "request"
         ]
       }
     },
-    "/position": {
+    "/flight/position": {
       "post": {
         "summary": "Position report",
         "tags": [
@@ -392,42 +316,47 @@
           },
           "description": ""
         }
-      }
+      },
+      "parameters": []
     },
     "/logoff": {
       "get": {
         "summary": "Log off (end of flight)",
+        "operationId": "get-logoff",
+        "parameters": [],
+        "description": "I fused the logoff as report of end of flight.\n\nMartin: should this also automatically invalidate the login tokens?",
         "tags": [
-          "report"
+          "user"
         ],
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "500": {
-            "description": "Internal Server Error"
           }
-        },
-        "operationId": "get-logoff",
-        "parameters": [
-          {
-            "schema": {
-              "type": "string"
-            },
-            "in": "header",
-            "name": "token",
-            "required": true
-          }
-        ],
-        "description": "I fused the logoff as report of end of flight. "
+        }
       }
     }
   },
   "components": {
-    "schemas": {}
+    "schemas": {},
+    "securitySchemes": {
+      "client": {
+        "type": "oauth2",
+        "flows": {
+          "clientCredentials": {
+            "scopes": {},
+            "refreshUrl": "refresh",
+            "tokenUrl": "token"
+          }
+        },
+        "description": "Machine to machine API access"
+      },
+      "dev": {
+        "name": "API Key",
+        "type": "apiKey",
+        "in": "header",
+        "description": "API keys act as static, permanent access tokens - for testing and development purposes"
+      }
+    }
   },
   "tags": [
     {
@@ -437,7 +366,15 @@
       "name": "report"
     },
     {
-      "name": "instruction"
+      "name": "user"
+    }
+  ],
+  "security": [
+    {
+      "dev": []
+    },
+    {
+      "client": []
     }
   ]
 }
