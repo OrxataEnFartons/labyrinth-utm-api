@@ -284,6 +284,60 @@
                     }
                   }
                 }
+              },
+              "text/html": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "text/plain": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              },
+              "application/EDI-X12": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              },
+              "application/EDIFACT": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "drone_position": {
+                      "$ref": "./models/position.v1.json"
+                    },
+                    "traffic": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "./models/position.v1.json"
+                      }
+                    }
+                  }
+                }
+              },
+              "application/atom+xml": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "drone_position": {
+                      "$ref": "./models/position.v1.json"
+                    },
+                    "traffic": {
+                      "type": "array",
+                      "items": {
+                        "$ref": ""
+                      }
+                    }
+                  }
+                }
               }
             }
           },

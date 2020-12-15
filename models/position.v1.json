@@ -4,7 +4,7 @@
   "x-tags": [
     "report"
   ],
-  "description": "A report message of the position (among other things) of the drone. Similar to ADS-B. Probably not all drones will be able to provide all values. \n*** I inferred some basic values but I don't know exactly which kind of values can provide a small drone. ",
+  "description": "A report message of the position (among other things) of the drone. Similar to ADS-B. Probably not all drones will be able to provide all values. \n*** I inferred some basic values but I don't know exactly which kind of values can provide a small drone.\n*** Also, probably the serial number is not suitable to represent the drone in a tag and we could think of a kind of identifier, like the operator name. ",
   "properties": {
     "serial_number": {
       "type": "string"
