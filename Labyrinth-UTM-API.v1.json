@@ -338,6 +338,25 @@
                     }
                   }
                 }
+              },
+              "application/font-woff": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "traffic": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "./models/position.v1.json"
+                      }
+                    },
+                    "drone_position": {
+                      "$ref": "./models/position.v1.json"
+                    },
+                    "instructions": {
+                      "type": "string"
+                    }
+                  }
+                }
               }
             }
           },
@@ -346,7 +365,7 @@
           }
         },
         "operationId": "post-position",
-        "description": "Kind of ADS-B/Remote ID. These reports are redundantly sent by the drone and the GCS. I added a query param to distinguish which one is sending the information. \nWhen the UTM needs to change the plan, leverages the reply to this report to send the change. \nIf the GCS loses the link with the drone, it keeps sending this message to the UTM without the position. Then, if the drone keeps the link with the UTM, the UTM leverages the reply to the GCS empty report to forward to it the aircraft status. ",
+        "description": "Kind of ADS-B/Remote ID. These reports are redundantly sent by the drone and the GCS. I added a query param to distinguish which one is sending the information. \nI understand that the only way for the UTM to send messages to the pilot is to leverage the reply to the position reports. The, these are then the situations that will make use of that reply:\n- When the UTM needs to change the flight plan (deviations), it will include the instructions. \n- If the GCS loses the link with the drone, it keeps sending empty position reports. Then, if the drone keeps the link with the UTM, the UTM leverages the reply to the GCS to relay the position and status of the drone.\n- an array of positions of traffic nearby\n",
         "parameters": [
           {
             "schema": {
