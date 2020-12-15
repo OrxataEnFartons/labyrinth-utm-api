@@ -334,6 +334,50 @@
           }
         }
       }
+    },
+    "/flight/contingency": {
+      "post": {
+        "summary": "Contingency report",
+        "tags": [
+          "report"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        },
+        "operationId": "post-flight-contingency",
+        "description": "When there is a contingency and the drone is still able to communicate with the UTM, it will send this report to warn about the contingency plan about to be loaded and executed. In principle, UTM should have knowledge of the details of the contingency plans before the flight, because these must appear in the flight plan, and therefore could be referenced with an id. However, during the flight the pilot could have been forced to change them, so we should accept also an intent, instead. \n\nNo idea yet about how intents can de specified or if that depends on the drone FMS. So I put a string by now and a format flag to identify the format that we will find in such string. This flag can also indicate that what appears in the string is a identifier of an intent appearing already in the flight plan. ",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "string"
+              }
+            },
+            "application/xml": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "format": {
+                    "type": "string"
+                  },
+                  "intent": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "format",
+                  "intent"
+                ]
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
