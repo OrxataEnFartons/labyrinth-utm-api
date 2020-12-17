@@ -9,24 +9,12 @@
   "description": "Flight plan including desired trajectory, preferences and contingency plans.",
   "properties": {
     "serial_number": {
-      "type": [
-        "array",
-        "string"
-      ],
-      "description": "Sistem ID of the drone or drones (when is a swarm)",
+      "type": "array",
+      "description": "Sistem ID of the drone or drones (when dealing with a swarm, otherwise the array should only contain a single S/N)",
       "items": {}
     },
-    "date": {
-      "type": "string",
-      "description": "No special format found. We could require f.i. dd-mm-yy"
-    },
-    "time": {
-      "type": "string",
-      "description": "Take-off time. No special format found, but we will require the 0-23 format."
-    },
-    "UTC": {
-      "type": "string",
-      "description": "UTC time zone. F. i. \"+1\" "
+    "datetime": {
+      "$ref": "./datetime.v1.json"
     },
     "origin": {
       "type": "array",
@@ -34,7 +22,7 @@
       "maxItems": 2,
       "minItems": 2,
       "items": {
-        "type": "number"
+        "$ref": "./waypoint.v1.json"
       }
     },
     "destination": {
@@ -43,7 +31,7 @@
       "maxItems": 2,
       "description": "Destination waypoint",
       "items": {
-        "type": "number"
+        "$ref": "./waypoint.v1.json"
       }
     },
     "trajectory": {
@@ -54,7 +42,7 @@
           "maxItems": 2,
           "description": "waypoint",
           "items": {
-            "type": "integer"
+            "$ref": "./waypoint.v1.json"
           }
         },
         {
@@ -65,7 +53,7 @@
     },
     "altitude": {
       "type": "number",
-      "description": "Preferred altitude. Required sea level referred. "
+      "description": "Preferred altitude above sea level"
     },
     "geofences": {
       "type": "array",
@@ -84,9 +72,7 @@
   },
   "required": [
     "serial_number",
-    "date",
-    "time",
-    "UTC",
+    "datetime",
     "origin",
     "destination"
   ]

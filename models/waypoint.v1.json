@@ -2,16 +2,35 @@
   "title": "waypoint",
   "type": "object",
   "properties": {
-    "coords": {
+    "lon": {
+      "type": "number",
+      "description": "Target longitude"
+    },
+    "lat": {
+      "type": "number",
+      "description": "Target latitude"
+    },
+    "alt": {
       "type": "array",
-      "minItems": 2,
+      "description": "Target elevation range",
       "maxItems": 2,
+      "minItems": 1,
       "items": {
         "type": "number"
+      }
+    },
+    "time": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 2,
+      "description": "Target time range at which the waypoint should be reached",
+      "items": {
+        "$ref": "./datetime.v1.json"
       }
     }
   },
   "required": [
-    "coords"
+    "lon",
+    "lat"
   ]
 }

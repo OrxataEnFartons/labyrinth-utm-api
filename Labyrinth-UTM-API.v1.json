@@ -98,7 +98,7 @@
                       "description": "here we say somehow: a) it was accepted (and no no more actions are required from the pilot side), b) it was rejected and in this case they can find an alternative plan (their plan with some modifications to make it feasible) or not (several factors can contribute to the possibility to calculate an alternative plan)"
                     },
                     "alternative": {
-                      "$ref": "../models/flight_plan.v1.json"
+                      "$ref": "./models/flight_plan.v1.json"
                     },
                     "flight_plan_id": {
                       "type": "string"
@@ -127,7 +127,7 @@
                 "type": "object",
                 "properties": {
                   "": {
-                    "$ref": "../models/flight_plan.v1.json"
+                    "$ref": "./models/flight_plan.v1.json"
                   }
                 },
                 "required": [
@@ -191,7 +191,7 @@
     },
     "/flight/takeoff": {
       "parameters": [],
-      "get": {
+      "post": {
         "summary": "",
         "operationId": "get-takeoff-flight_plan_id",
         "responses": {
@@ -207,7 +207,7 @@
                       "description": "In case is rejected, for the pilot to know how to build a feasible plan."
                     },
                     "alternative": {
-                      "$ref": "../models/flight_plan.v1.json"
+                      "$ref": "./models/flight_plan.v1.json"
                     }
                   }
                 }
@@ -234,7 +234,7 @@
                 "type": "object",
                 "properties": {
                   "flight_plan_changes": {
-                    "$ref": "../models/flight_plan.v1.json"
+                    "$ref": "./models/flight_plan.v1.json"
                   }
                 }
               }
@@ -259,7 +259,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "../models/flight_plan.v1.json"
+                  "$ref": "./models/flight_plan.v1.json"
                 }
               },
               "application/xml": {
@@ -267,10 +267,10 @@
                   "type": "object",
                   "properties": {
                     "deviation": {
-                      "$ref": "../models/flight_plan.v1.json"
+                      "$ref": "./models/flight_plan.v1.json"
                     },
                     "position": {
-                      "$ref": "../models/position.v1.json"
+                      "$ref": "./models/position.v1.json"
                     }
                   }
                 }
@@ -391,7 +391,7 @@
                 "type": "object",
                 "properties": {
                   "position": {
-                    "$ref": "../models/position.v1.json"
+                    "$ref": "./models/position.v1.json"
                   }
                 }
               }

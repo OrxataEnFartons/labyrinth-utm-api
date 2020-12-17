@@ -33,8 +33,8 @@
       "type": "number",
       "description": "Z Speed (in Latitude direction, positive: going north) (float)"
     },
-    "timestamp": {
-      "type": "string"
+    "datetime": {
+      "$ref": "./datetime.v1.json"
     },
     "ground_speed": {
       "type": "number"
@@ -45,6 +45,35 @@
     "unable": {
       "type": "string",
       "description": "The drone cannot comply with the flight plan/instructions and includes a code indicating the reason, something like MALFUNCTION, BATTERY, SEPARATION... but keeps sending its position and intent to the UTM. The drone should be able to distinguish when it comes back to the flight path and can delete this flag. "
+    },
+    "pitch": {
+      "type": "number"
+    },
+    "roll": {
+      "type": "number"
+    },
+    "heading": {
+      "type": "number"
+    },
+    "eta": {
+      "type": "number",
+      "description": "Estimated remaining flight time"
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "normal",
+        "manual",
+        "landing",
+        "takeover",
+        "return",
+        "emergency"
+      ],
+      "description": "Flight mode or operational status"
+    },
+    "airspeed": {
+      "type": "number",
+      "description": "Estimated airspeed (in relation to wind)"
     }
   },
   "required": [
@@ -55,6 +84,7 @@
     "vx",
     "vy",
     "vz",
-    "timestamp"
+    "datetime",
+    "mode"
   ]
 }

@@ -1,0 +1,7 @@
+{
+  "type": "string",
+  "title": "datetime",
+  "description": "Date and time in ISO8601 format",
+  "example": "2007-08-31T16:47+00:00 ",
+  "format": "date-time"
+}
