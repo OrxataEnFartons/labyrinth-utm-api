@@ -204,7 +204,7 @@
                   "properties": {
                     "reasons": {
                       "type": "string",
-                      "description": "In case is rejected, for the pilot to know how to build a feasible plan."
+                      "description": "Reason why the intended flight plan was rejected, for the pilot to know how to build a feasible plan."
                     },
                     "alternative": {
                       "$ref": "./models/flight_plan.v1.json"
