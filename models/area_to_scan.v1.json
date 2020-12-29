@@ -19,7 +19,7 @@
     },
     "path": {
       "type": "array",
-      "description": "The path to follow inside the area. Leaving it optional in case the want to design the scan path in the planner.",
+      "description": "The path to follow inside the area. Leaving it optional in case they want to design the scan path in the planner.",
       "items": {
         "$ref": "./waypoint.v1.json"
       }

@@ -53,11 +53,11 @@
     },
     "altitude": {
       "type": "number",
-      "description": "Preferred altitude above sea level"
+      "description": "Preferred altitude above sea level during all the flight. "
     },
     "geofences": {
       "type": "array",
-      "description": "Operators can define areas to avoid during the flight (I guess in case an alternative is sent)",
+      "description": "Operators can define areas to avoid during the flight ",
       "items": {
         "$ref": "./geofence.v1.json"
       }
@@ -67,7 +67,7 @@
     },
     "max_speed_pref": {
       "type": "string",
-      "description": "Maximum speed desired by the operator. In the UC3 planner applies to all the flight and will try to fly at that speed where possible. "
+      "description": "Maximum speed desired by the operator (UC3M planner allowed preference). It applies to all the flight. The planner will try to fly at that speed where possible. "
     }
   },
   "required": [

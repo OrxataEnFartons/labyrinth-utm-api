@@ -173,7 +173,7 @@
             }
           }
         },
-        "description": "Accept a flight plan alternative previously sent by the server. (Miguel: In my mind it was that this get could be used also to accept the alternative offered after sending a /takeoff that is rejected)",
+        "description": "Pilot accepts a flight plan alternative sent by the server. ",
         "parameters": [
           {
             "schema": {
@@ -365,7 +365,7 @@
           }
         },
         "operationId": "post-position",
-        "description": "Kind of ADS-B/Remote ID. These reports are redundantly sent by the drone and the GCS. I added a query param to distinguish which one is sending the information. \nI understand that the only way for the UTM to send messages to the pilot is to leverage the reply to the position reports. The, these are then the situations that will make use of that reply:\n- When the UTM needs to change the flight plan (deviations), it will include the instructions. \n- If the GCS loses the link with the drone, it keeps sending empty position reports. Then, if the drone keeps the link with the UTM, the UTM leverages the reply to the GCS to relay the position and status of the drone.\n- an array of positions of traffic nearby\n",
+        "description": "Kind of ADS-B/Remote ID. These reports are redundantly sent by the drone and the GCS. I added a query param to distinguish which one is sending the information. \nI understand that the only way for the UTM to send messages to the pilot is to leverage the reply to the position reports. Then, these are then the situations that will make use of that reply:\n- When the UTM needs to change the flight plan (deviations), it will include the instructions. \n- If the GCS loses the link with the drone, it keeps sending empty position reports. Then, if the drone keeps the link with the UTM, the UTM leverages the reply to the GCS to relay the position and status of the drone.\n- an array of positions of traffic nearby\n",
         "parameters": [
           {
             "schema": {
