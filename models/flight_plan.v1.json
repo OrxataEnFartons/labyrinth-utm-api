@@ -37,7 +37,6 @@
     "trajectory": {
       "anyOf": [
         {
-          "type": "array",
           "minItems": 2,
           "maxItems": 2,
           "description": "waypoint",
@@ -46,10 +45,13 @@
           }
         },
         {
-          "$ref": "./area_to_scan.v1.json"
+          "items": {
+            "$ref": "./geofence.v1.json"
+          }
         }
       ],
-      "description": "The minimum WPs are origin an destination. This is optional."
+      "description": "The minimum WPs are origin an destination. This is optional.",
+      "type": "array"
     },
     "altitude": {
       "type": "number",
@@ -68,6 +70,16 @@
     "max_speed_pref": {
       "type": "string",
       "description": "Maximum speed desired by the operator (UC3M planner allowed preference). It applies to all the flight. The planner will try to fly at that speed where possible. "
+    },
+    "risky_areas": {
+      "type": [
+        "string",
+        "array"
+      ],
+      "description": "The pilot indicates some areas that would preferably be avoided. F.i., overflying people, or in the case of the traffic monitoring, the airspace over the road, as it's safer to fly at the side of the road. Then, these are not restricted or geofenced areas (although same datatype is leveraged), but to be avoided as much as possible. ",
+      "items": {
+        "$ref": "./geofence.v1.json"
+      }
     }
   },
   "required": [

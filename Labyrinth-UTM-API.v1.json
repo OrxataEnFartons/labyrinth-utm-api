@@ -4,9 +4,9 @@
     "title": "Labyrinth UTM API",
     "version": "1.0",
     "contact": {
-      "name": "FL-PAS",
+      "name": "DLR",
       "url": "www.",
-      "email": "someone@dlr.de"
+      "email": "MiguelAngel.FasMillan@dlr.de"
     },
     "description": "API describing the message exchange between the drones/GCSs and the UTM system."
   },
