@@ -10,11 +10,8 @@
   "properties": {
     "serial_number": {
       "type": "array",
-      "description": "Sistem ID of the drone or drones (when dealing with a swarm, otherwise the array should only contain a single S/N)",
+      "description": "Sistem ID of the drone or drones ",
       "items": {}
-    },
-    "activation": {
-      "$ref": "./datetime.v1.json"
     },
     "trajectory": {
       "anyOf": [
@@ -53,7 +50,6 @@
   },
   "required": [
     "serial_number",
-    "activation",
     "trajectory"
   ]
 }

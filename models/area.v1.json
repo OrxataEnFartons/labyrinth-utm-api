@@ -14,6 +14,17 @@
     "risk": {
       "type": "string",
       "description": "Subjective level of risk [1, 4], with 1 highest risk. "
+    },
+    "": {
+      "type": "string"
+    },
+    "bottom": {
+      "type": "number",
+      "description": "Bottom altitude. Ground default. "
+    },
+    "top": {
+      "type": "number",
+      "description": "Top altitude of the volume. Maximum default. "
     }
   },
   "required": [
