@@ -154,7 +154,7 @@
               }
             }
           },
-          "description": "Flight plan to validate.\n\nMiguel: I am considering that is the server which sets the flight plan id.\n\nMartin: I also think that this would be the best way, otherwise the client would need to have a reasonable way to generate valid, unique IDs."
+          "description": "Flight plan to validate before the take off.\n\nThe server sets the flight plan ID."
         }
       },
       "parameters": [],

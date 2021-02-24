@@ -6,33 +6,15 @@
       "id": "string"
     }
   },
-  "description": "Flight plan including desired trajectory, preferences and contingency plans.",
+  "description": "Flight plan including desired trajectory, preferences and contingency plans. Operator and pilot are taken from the login. ",
   "properties": {
     "serial_number": {
       "type": "array",
       "description": "Sistem ID of the drone or drones (when dealing with a swarm, otherwise the array should only contain a single S/N)",
       "items": {}
     },
-    "datetime": {
+    "activation": {
       "$ref": "./datetime.v1.json"
-    },
-    "origin": {
-      "type": "array",
-      "description": "Origin coords (WGS84 in Decimal Degrees format)",
-      "maxItems": 2,
-      "minItems": 2,
-      "items": {
-        "$ref": "./waypoint.v1.json"
-      }
-    },
-    "destination": {
-      "type": "array",
-      "minItems": 2,
-      "maxItems": 2,
-      "description": "Destination waypoint",
-      "items": {
-        "$ref": "./waypoint.v1.json"
-      }
     },
     "trajectory": {
       "anyOf": [
@@ -46,46 +28,32 @@
         },
         {
           "items": {
-            "$ref": "./geofence.v1.json"
+            "$ref": "./area.v1.json"
           }
         }
       ],
       "description": "The minimum WPs are origin an destination. This is optional.",
       "type": "array"
     },
-    "altitude": {
+    "max_altitude": {
       "type": "number",
       "description": "Preferred altitude above sea level during all the flight. "
-    },
-    "geofences": {
-      "type": "array",
-      "description": "Operators can define areas to avoid during the flight ",
-      "items": {
-        "$ref": "./geofence.v1.json"
-      }
-    },
-    "fligh_plan_id": {
-      "type": "integer"
     },
     "max_speed_pref": {
       "type": "string",
       "description": "Maximum speed desired by the operator (UC3M planner allowed preference). It applies to all the flight. The planner will try to fly at that speed where possible. "
     },
-    "risky_areas": {
-      "type": [
-        "string",
-        "array"
-      ],
+    "avoid_areas": {
+      "type": "array",
       "description": "The pilot indicates some areas that would preferably be avoided. F.i., overflying people, or in the case of the traffic monitoring, the airspace over the road, as it's safer to fly at the side of the road. Then, these are not restricted or geofenced areas (although same datatype is leveraged), but to be avoided as much as possible. ",
       "items": {
-        "$ref": "./geofence.v1.json"
+        "$ref": "./area.v1.json"
       }
     }
   },
   "required": [
     "serial_number",
-    "datetime",
-    "origin",
-    "destination"
+    "activation",
+    "trajectory"
   ]
 }

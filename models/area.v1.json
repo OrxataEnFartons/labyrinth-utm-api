@@ -1,0 +1,22 @@
+{
+  "title": "area_to_scan",
+  "type": "object",
+  "description": "",
+  "properties": {
+    "vertices": {
+      "type": "array",
+      "minItems": 3,
+      "description": "Perimeter of the area to scan. At least a triangle.",
+      "items": {
+        "$ref": "./waypoint.v1.json"
+      }
+    },
+    "risk": {
+      "type": "string",
+      "description": "Subjective level of risk [1, 4], with 1 highest risk. "
+    }
+  },
+  "required": [
+    "vertices"
+  ]
+}
