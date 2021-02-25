@@ -500,7 +500,7 @@
                 "type": "object",
                 "properties": {
                   "risk_area": {
-                    "$ref": "./models/geofence.v1.json"
+                    "$ref": "./models/area.v1.json"
                   },
                   "risk_level": {
                     "type": "integer",
