@@ -11,7 +11,9 @@
     "serial_number": {
       "type": "array",
       "description": "Sistem ID of the drone or drones ",
-      "items": {}
+      "items": {
+        "type": "string"
+      }
     },
     "trajectory": {
       "anyOf": [
